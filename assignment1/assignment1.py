@@ -43,3 +43,42 @@ sample3 = 'test_input/sample3.txt'
 output = 'output/output1.txt'
 
 count_crossings(sample1, output)
+
+
+''' basic math behind an intersection:
+
+line = [pi,qi]
+
+check_intersect(line1, line2)
+    if (p1 < p2):
+        if (q1 >= q2): intersection
+        else: no intersection
+    elif (p1 > p2):
+        if (q1 <= q2): intersection
+        else: no intersection
+    else: intersection (same p1)
+    
+
+    RECURSION IDEAS:
+
+    [1,2,3]
+    [3,2,1]
+
+    line 1: [1,3]
+    line 2: [2,2]
+    line 3: [3,1]
+
+    Now we have 3 elements:
+    l1,l2,l3
+    line_list = [l1,l2,l3]
+
+    check_intersect(line_list[0],line_list[1])
+    check_intersect(line_list[0],line_list[2])
+    check_intersect(line_list[1],line_list[2])
+
+    sum return values of all calls of check_intersect
+
+'''
+
+
+
