@@ -21,6 +21,25 @@ def array_input(input_file_path, line_num):
             i += 1
 
 
+def check_intersect(line1, line2):
+    p1 = line1[0]
+    q1 = line1[1]
+    p2 = line2[0]
+    q2 = line2[1]
+    if p1 < p2:
+        if q1 >= q2:
+            return 1
+        else:
+            return 0
+    elif p1 > p2:
+        if q1 <= q2:
+            return 1
+        else:
+            return 0
+    else:
+        return 1
+
+
 def count_crossings(input_file_path, output_file_path):
     """
         This function will contain your code.  It wil read from the file <input_file_path>,
@@ -29,7 +48,19 @@ def count_crossings(input_file_path, output_file_path):
     line1 = array_input(input_file_path, 1)  # first line of input into line1
     line2 = array_input(input_file_path, 2)  # second line of input into line2
 
-    pass
+    line_list = list()
+    counter = 0  # TODO remove/replace with better name
+    for p in line1:
+        line_list.append([p, line2[counter]])
+        counter += 1
+
+    counter = 0
+    for i in range(0, len(line_list)):
+        for j in range(i, len(line_list)):
+            counter += check_intersect(line_list[i], line_list[j])
+
+    with open(output_file_path, "w") as out:
+        out.write(str(int(counter/2)))
 
 
 '''
