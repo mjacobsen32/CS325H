@@ -55,6 +55,7 @@ def count_crossings(input_file_path, output_file_path):
         counter += 1
 
     counter = 0
+
     for i in range(0, len(line_list)):
         for j in range(i, len(line_list)):
             counter += check_intersect(line_list[i], line_list[j])
@@ -71,9 +72,9 @@ sample1 = 'test_input/sample1.txt'
 sample2 = 'test_input/sample2.txt'
 sample3 = 'test_input/sample3.txt'
 
-output = 'output/output1.txt'
+output = 'output/output2.txt'
 
-count_crossings(sample1, output)
+count_crossings(sample3, output)
 
 ''' basic math behind an intersection:
 
