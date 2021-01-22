@@ -11,6 +11,12 @@ class CrossingsTest(TestCase):
         count_crossings("test_input/EMH1.txt", output_file_path)
         with open(output_file_path, "r") as output_file:
             self.assertEqual("2", output_file.readline(), "EMH 1")
+        count_crossings("test_input/EMH2.txt", output_file_path)
+        with open(output_file_path, "r") as output_file:
+            self.assertEqual("1", output_file.readline(), "EMH 2")
+        count_crossings("test_input/EMH3.txt", output_file_path)
+        with open(output_file_path, "r") as output_file:
+            self.assertEqual("5", output_file.readline(), "EMH 3")
 
     def test_count_crossings(self):
         count_crossings("test_input/sample1.txt", output_file_path)

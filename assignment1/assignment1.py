@@ -54,13 +54,18 @@ def count_crossings(input_file_path, output_file_path):
         line_list.append([int(p), int(line2[counter])])
         counter += 1
 
+    total = 0  # used to track runtime
+
     counter = 0
     for i in range(0, len(line_list)):
         for j in range(i+1, len(line_list)):
             counter += check_intersect(line_list[i], line_list[j])
+            total += 1
 
     with open(output_file_path, "w") as out:
         out.write(str(int(counter)))
+
+    print("iter:", total, " count:", len(line_list))
 
 
 '''
