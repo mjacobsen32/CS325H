@@ -1,7 +1,7 @@
 import unittest
 from unittest import TestCase
 
-from assignment1 import count_crossings, array_input
+from assignment1 import count_crossings, array_input, check_intersect
 
 output_file_path = "output/output1.txt"
 
@@ -28,6 +28,12 @@ class IOTest(TestCase):
     def test_array_input(self):
         self.assertEqual(["1", "2", "3"], array_input("test_input/sample1.txt", 1), "Line 1")
         self.assertEqual(["3", "2", "1"], array_input("test_input/sample1.txt", 2), "Line 2")
+
+
+class Test(TestCase):
+    def test_check_intersect(self):
+        self.assertEqual(0, check_intersect([0, 0], [1, 1]))
+        self.assertEqual(0, check_intersect([10, 22], [41, 100]))
 
 
 if __name__ == '__main__':
