@@ -40,6 +40,51 @@ def check_intersect(line1, line2):
         return 1
 
 
+# TODO implement at later date
+def find_median_index(lines):
+    return int(len(lines)/2)
+
+
+def recurse_crossing(lines):
+    # base cases
+    if len(lines) == 2:
+        return check_intersect(lines[0], lines[1])
+    if len(lines) <= 1:
+        return 0
+
+    # find median to insure correct run time
+    median_index = find_median_index(lines)
+    median = lines[median_index]
+
+    intersections = 0
+    left = list()
+    right = list()
+    for i in range(0, len(lines)):
+        # ignore self check
+        if i == median_index:
+            continue
+        # if line intersects then add it to both
+        if check_intersect(median, lines[i]) == 1:
+            intersections += 1
+            left.append(lines[i])
+            right.append(lines[i])
+        else:
+            # otherwise add it to just the right or left lists
+            if lines[i][0] > median[0]:  # to the right
+                right.append(lines[i])
+            else:  # to the left
+                left.append(lines[i])
+
+    # if the right and left are the same we don't want to count them twice
+    if left == right:
+        left.clear()
+
+    # recurse
+    intersections += recurse_crossing(left)
+    intersections += recurse_crossing(right)
+    return intersections
+
+
 def count_crossings(input_file_path, output_file_path):
     """
         This function will contain your code.  It wil read from the file <input_file_path>,
@@ -49,24 +94,29 @@ def count_crossings(input_file_path, output_file_path):
     line2 = array_input(input_file_path, 2)  # second line of input into line2
 
     line_list = list()
-    counter = 0  # TODO remove/replace with better name
-    for p in line1:
-        line_list.append([int(p), int(line2[counter])])
-        counter += 1
+    for i in range(0, len(line1)):
+        line_list.append([int(line1[i]), int(line2[i])])
 
     total = 0  # used to track runtime
 
-    counter = 0
+    intersections = 0
     for i in range(0, len(line_list)):
-        for j in range(i+1, len(line_list)):
-            counter += check_intersect(line_list[i], line_list[j])
+        for j in range(i + 1, len(line_list)):
+            intersections += check_intersect(line_list[i], line_list[j])
             total += 1
 
     with open(output_file_path, "w") as out:
-        out.write(str(int(counter)))
+        out.write(str(int(intersections)))
 
     print("iter:", total, " count:", len(line_list))
 
+
+# Find median
+# find points that intersect, add them to both left and right
+# find points on left, add to left
+# find points on right, add to right
+# recurse until there are separation of 1 and 2 points. Check the 2 points for intersection
+# check bottom of tree for intersections and count
 
 '''
     To test your function, you can uncomment the following command with the the input/output
