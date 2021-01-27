@@ -8,6 +8,7 @@
 """
 
 
+# Reads a certain line from the input file
 def array_input(input_file_path, line_num):
     with open(input_file_path, "r") as input_file:
         i = 0
@@ -21,6 +22,7 @@ def array_input(input_file_path, line_num):
             i += 1
 
 
+# the base case, check two lines for intersections
 def check_intersect(line1, line2):
     p1 = line1[0]
     q1 = line1[1]
@@ -40,6 +42,7 @@ def check_intersect(line1, line2):
         return 1
 
 
+# find the median value of a given list
 def find_median(line):
     # base case, handles 5 numbers in constant time
     if len(line) <= 5:
@@ -74,6 +77,7 @@ def find_median(line):
         return mom
 
 
+# Find the index of the median
 # an overall O(3n) function, so O(n)
 def find_median_index(wires):
     line = []
@@ -85,6 +89,7 @@ def find_median_index(wires):
             return i
 
 
+# Our recursive function
 def recurse_crossing(lines):
     # base cases
     if len(lines) == 2:
