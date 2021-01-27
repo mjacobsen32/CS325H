@@ -40,9 +40,49 @@ def check_intersect(line1, line2):
         return 1
 
 
-# TODO implement at later date
-def find_median_index(lines):
-    return int(len(lines)/2)
+def find_median(line):
+    # base case, handles 5 numbers in constant time
+    if len(line) <= 5:
+        line.sort()
+        return line[int(len(line) / 2)]
+
+    # divide into the groups of 5 and finds median
+    medians = []
+    groups_index = 0
+    while groups_index + 5 < len(line) - 1:
+        medians.append(find_median(line[groups_index:groups_index + 5]))
+        groups_index += 5
+
+    # find median of medians
+    mom = find_median(medians)
+    less_than_mom = []
+    greater_than_mom = []
+
+    # partition array (into two diff arrays)
+    for i in line:
+        if i < mom:
+            less_than_mom.append(i)
+        if i > mom:
+            greater_than_mom.append(i)
+
+    # recurse or return based on where we stand
+    if len(line) < len(less_than_mom):
+        return find_median(less_than_mom)
+    elif len(line) > len(less_than_mom) + 1:
+        return find_median(greater_than_mom)
+    else:
+        return mom
+
+
+# an overall O(3n) function, so O(n)
+def find_median_index(wires):
+    line = []
+    for x in range(len(wires)):  # take O(n) to just grab top line
+        line.append(wires[x][0])
+    mid = find_median(line)  # use above function to find median value
+    for i in range(len(line)):  # another O(n) to find the index again
+        if line[i] == mid:
+            return i
 
 
 def recurse_crossing(lines):
@@ -128,39 +168,5 @@ sample3 = 'test_input/sample3.txt'
 
 output = 'output/output1.txt'
 
-count_crossings(sample1, output)
-
-''' basic math behind an intersection:
-
-line = [pi,qi]
-
-check_intersect(line1, line2)
-    if (p1 < p2):
-        if (q1 >= q2): intersection
-        else: no intersection
-    elif (p1 > p2):
-        if (q1 <= q2): intersection
-        else: no intersection
-    else: intersection (same p1)
-    
-
-    RECURSION IDEAS:
-
-    [1,2,3]
-    [3,2,1]
-
-    line 1: [1,3]
-    line 2: [2,2]
-    line 3: [3,1]
-
-    Now we have 3 elements:
-    l1,l2,l3
-    line_list = [l1,l2,l3]
-
-    check_intersect(line_list[0],line_list[1])
-    check_intersect(line_list[0],line_list[2])
-    check_intersect(line_list[1],line_list[2])
-
-    sum return values of all calls of check_intersect
-
-'''
+# count_crossings(sample1, output)
+print(find_median_index([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]]))
