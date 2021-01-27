@@ -49,7 +49,7 @@ def find_median(line):
     # divide into the groups of 5 and finds median
     medians = []
     groups_index = 0
-    while groups_index + 5 < len(line) - 1:
+    while groups_index + 5 <= len(line) - 1:
         medians.append(find_median(line[groups_index:groups_index + 5]))
         groups_index += 5
 
@@ -77,8 +77,8 @@ def find_median(line):
 # an overall O(3n) function, so O(n)
 def find_median_index(wires):
     line = []
-    for x in range(len(wires)):  # take O(n) to just grab top line
-        line.append(wires[x][0])
+    for x in wires:  # take O(n) to just grab top line
+        line.append(x[0])
     mid = find_median(line)  # use above function to find median value
     for i in range(len(line)):  # another O(n) to find the index again
         if line[i] == mid:
@@ -99,7 +99,7 @@ def recurse_crossing(lines):
     intersections = 0
     left = list()
     right = list()
-    for i in range(0, len(lines)):
+    for i in range(len(lines)):
         # ignore self check
         if i == median_index:
             continue
@@ -137,18 +137,10 @@ def count_crossings(input_file_path, output_file_path):
     for i in range(0, len(line1)):
         line_list.append([int(line1[i]), int(line2[i])])
 
-    total = 0  # used to track runtime
-
-    intersections = 0
-    for i in range(0, len(line_list)):
-        for j in range(i + 1, len(line_list)):
-            intersections += check_intersect(line_list[i], line_list[j])
-            total += 1
+    intersections = recurse_crossing(line_list)
 
     with open(output_file_path, "w") as out:
         out.write(str(int(intersections)))
-
-    print("iter:", total, " count:", len(line_list))
 
 
 # Find median
@@ -168,5 +160,5 @@ sample3 = 'test_input/sample3.txt'
 
 output = 'output/output1.txt'
 
-# count_crossings(sample1, output)
-print(find_median_index([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]]))
+# count_crossings("given_examples/input4.txt", output)
+# print(find_median_index([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]]))
