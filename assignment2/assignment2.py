@@ -22,6 +22,9 @@ def array_input(input_file_path, line_num):
             i += 1
 
 
+memoization = dict()
+
+
 def my_points_against_elmo(input_file_path, output_file_path):
     """
         This function will contain your code.  It wil read from the file <input_file_path>,
@@ -42,6 +45,9 @@ def calculate_points(card_array):
     """
         This is where all the calculation logic should occur
     """
+    hashed_array = hash(str(card_array))
+    if memoization.get(hashed_array):
+        return int(memoization.get(hashed_array))
 
     if len(card_array) == 1:
         return int(card_array[0])
@@ -50,13 +56,14 @@ def calculate_points(card_array):
     else:
         left = int(card_array[0])
         right = int(card_array[len(card_array) - 1])
-        return (max((left + min(calculate_points(card_array[2:]), calculate_points(card_array[1:-1]))),
-                    (right + min(calculate_points(card_array[:-2]), calculate_points(card_array[1:-1])))))
-    # TODO set up tests to make sure file io is working as expected
+        value = (max((left + min(calculate_points(card_array[2:]), calculate_points(card_array[1:-1]))),
+                     (right + min(calculate_points(card_array[:-2]), calculate_points(card_array[1:-1])))))
+        memoization.update({hashed_array: value})
+        return value
 
 
 if __name__ == '__main__':
     print(calculate_points([1, 2, 3]))  # should be 2
     print(calculate_points([5, 10, 2, 3]))  # should be 7
     print(calculate_points([100]))  # should be 0
-    # print(calculate_points([i for i in range(1000)]))
+    print(calculate_points([i for i in range(1000)]))
