@@ -28,10 +28,10 @@ def my_points_against_elmo(input_file_path, output_file_path):
         and will write its output to the file <output_file_path>.
     """
     card_array = array_input(input_file_path, 1)
-    
+
     total = 0
     for i in range(0, len(card_array)):
-        total = total + card_array[i]
+        total = total + int(card_array[i])
     points = total - calculate_points(card_array)
 
     with open(output_file_path, "w") as out:
@@ -43,18 +43,20 @@ def calculate_points(card_array):
         This is where all the calculation logic should occur
     """
 
-    if(len(card_array) == 1):
-        return(card_array[0])
-    elif(len(card_array) == 2):
-        return(max(card_array[0],card_array[1]))
+    if len(card_array) == 1:
+        return int(card_array[0])
+    elif len(card_array) == 2:
+        return max(int(card_array[0]), int(card_array[1]))
     else:
-        l = card_array[0]
-        r = card_array[len(card_array)-1]
-        return(max((l + min(calculate_points(card_array[2:]), calculate_points(card_array[1:-1]))),(r + min(calculate_points(card_array[:-2]), calculate_points(card_array[1:-1])))))
-    return 0  # TODO set up tests to make sure file io is working as expected
+        left = int(card_array[0])
+        right = int(card_array[len(card_array) - 1])
+        return (max((left + min(calculate_points(card_array[2:]), calculate_points(card_array[1:-1]))),
+                    (right + min(calculate_points(card_array[:-2]), calculate_points(card_array[1:-1])))))
+    # TODO set up tests to make sure file io is working as expected
 
 
 if __name__ == '__main__':
     print(calculate_points([1, 2, 3]))  # should be 2
     print(calculate_points([5, 10, 2, 3]))  # should be 7
     print(calculate_points([100]))  # should be 0
+    # print(calculate_points([i for i in range(1000)]))
