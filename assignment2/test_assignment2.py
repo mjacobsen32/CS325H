@@ -12,7 +12,7 @@ class Test(TestCase):
     #     self.assertEquals(7, calculate_points([5, 10, 2, 3]))
     #     self.assertEquals(0, calculate_points([100]), 0)
 
-    def test_count_crossings(self):
+    def test_points_samples(self):
         my_points_against_elmo("test_input/sample1.txt", output_file_path)
         with open(output_file_path, "r") as output_file:
             self.assertEqual("2", output_file.readline(), "Sample 1")
@@ -22,6 +22,11 @@ class Test(TestCase):
         my_points_against_elmo("test_input/sample3.txt", output_file_path)
         with open(output_file_path, "r") as output_file:
             self.assertEqual("0", output_file.readline(), "Sample 3")
+
+    def test_points_custom(self):
+        my_points_against_elmo("test_input/custom1.txt", output_file_path)
+        with open(output_file_path, "r") as output_file:
+            self.assertEqual("2099", output_file.readline(), "Custom 1")
 
 
 if __name__ == '__main__':

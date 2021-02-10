@@ -32,9 +32,14 @@ def my_points_against_elmo(input_file_path, output_file_path):
     """
     card_array = array_input(input_file_path, 1)
 
-    total = 0
-    for i in range(0, len(card_array)):
-        total = total + int(card_array[i])
+    # make sure all items in array are integers
+    card_array = list(map(int, card_array))
+
+    # find the total sum of all cards
+    total = sum(card_array)
+
+    # we calculate elmos points/the player who goes first,
+    # so figure out the second players points
     points = total - calculate_points(card_array)
 
     with open(output_file_path, "w") as out:
@@ -43,23 +48,30 @@ def my_points_against_elmo(input_file_path, output_file_path):
 
 def calculate_points(card_array):
     """
-        This is where all the calculation logic should occur
+        The recursive function
     """
-    hashed_array = hash(str(card_array))
-    if memoization.get(hashed_array):
-        return int(memoization.get(hashed_array))
-
+    # the two base cases (which we don't bother using memoization for)
     if len(card_array) == 1:
-        return int(card_array[0])
+        return card_array[0]
     elif len(card_array) == 2:
-        return max(int(card_array[0]), int(card_array[1]))
-    else:
-        left = int(card_array[0])
-        right = int(card_array[len(card_array) - 1])
-        value = (max((left + min(calculate_points(card_array[2:]), calculate_points(card_array[1:-1]))),
-                     (right + min(calculate_points(card_array[:-2]), calculate_points(card_array[1:-1])))))
-        memoization.update({hashed_array: value})
-        return value
+        return max(card_array[0], card_array[1])
+
+    # convert the input to a string then turn it into a 64 bit (nearly unique) number
+    hashed_array = hash(str(card_array))
+
+    # see if we have calculated this previously
+    saved_value = memoization.get(hashed_array)
+    if saved_value:
+        return saved_value
+
+    left = card_array[0]
+    right = card_array[len(card_array) - 1]
+    value = (max((left + min(calculate_points(card_array[2:]), calculate_points(card_array[1:-1]))),
+                 (right + min(calculate_points(card_array[:-2]), calculate_points(card_array[1:-1])))))
+
+    # remember output for this specific array
+    memoization.update({hashed_array: value})
+    return value
 
 
 if __name__ == '__main__':
@@ -67,3 +79,4 @@ if __name__ == '__main__':
     print(calculate_points([5, 10, 2, 3]))  # should be 7
     print(calculate_points([100]))  # should be 0
     print(calculate_points([i for i in range(1000)]))
+    # print(calculate_points([random.randint(0, 10000) for i in range(1000)]))
