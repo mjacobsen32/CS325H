@@ -66,8 +66,12 @@ def calculate_points(card_array):
 
     left = card_array[0]
     right = card_array[len(card_array) - 1]
-    value = (max((left + min(calculate_points(card_array[2:]), calculate_points(card_array[1:-1]))),
-                 (right + min(calculate_points(card_array[:-2]), calculate_points(card_array[1:-1])))))
+
+    # since we use this value twice, might as well only compute it once
+    one_off_each_side = calculate_points(card_array[1:-1])
+
+    value = (max((left + min(calculate_points(card_array[2:]), one_off_each_side)),
+                 (right + min(calculate_points(card_array[:-2]), one_off_each_side))))
 
     # remember output for this specific array
     memoization.update({hashed_array: value})
