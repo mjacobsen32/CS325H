@@ -6,7 +6,7 @@
 
     Also, I will use <python3> to run this code.
 """
-
+mem_array = [[1,2,3],[2,2],[33,3]]
 
 # Reads a certain line from the input file
 def array_input(input_file_path, line_num):
@@ -37,11 +37,17 @@ def my_points_against_elmo(input_file_path, output_file_path):
     with open(output_file_path, "w") as out:
         out.write(str(int(points)))
 
+def array_in_memory(array):
+    for i in range(0, len(mem_array)):
+        if array == mem_array[i]:
+            return(True)
+    return(False)
 
 def calculate_points(card_array):
     """
         This is where all the calculation logic should occur
     """
+
 
     if(len(card_array) == 1):
         return(card_array[0])
@@ -58,3 +64,7 @@ if __name__ == '__main__':
     print(calculate_points([1, 2, 3]))  # should be 2
     print(calculate_points([5, 10, 2, 3]))  # should be 7
     print(calculate_points([100]))  # should be 0
+
+print(array_in_memory([1,2,3]))
+print(array_in_memory([33,3]))
+print(array_in_memory([3,33]))
