@@ -107,47 +107,45 @@ def sort_edges(edges_list, start, end):
     sort_edges(edges_list, p + 1, end)
 
 
-class Graph:
-    def __init__(self, edges, vertex):
-        self.vertices = vertex
-        self.graph = edges
-        self.total = 0
+def find_root(parent, i):
+    if parent[i] == i:
+        return i
+    return find_root(parent, parent[i])
 
-    def find_root(self, parent, i):
-        if parent[i] == i:
-            return i
-        return self.find_root(parent, parent[i])
 
-    def join_two_trees(self, parent, rank, x, y):
-        xroot = self.find_root(parent, x)
-        yroot = self.find_root(parent, y)
-        if rank[xroot] < rank[yroot]:
-            parent[xroot] = yroot
-        elif rank[xroot] > rank[yroot]:
-            parent[yroot] = xroot
-        else:
-            parent[yroot] = xroot
-            rank[xroot] += 1
+def join_two_trees(parent, rank, x, y):
+    xroot = find_root(parent, x)
+    yroot = find_root(parent, y)
+    if rank[xroot] < rank[yroot]:
+        parent[xroot] = yroot
+    elif rank[xroot] > rank[yroot]:
+        parent[yroot] = xroot
+    else:
+        parent[yroot] = xroot
+        rank[xroot] += 1
 
-    def kruskal(self):
-        result = []
-        i, e = 0, 0
-        parent = []
-        rank = []
-        for node in range(self.vertices):
-            parent.append(node)
-            rank.append(0)
-        while e < self.vertices - 1:
-            (w, u, v) = self.graph[i]
-            i = i + 1
-            x = self.find_root(parent, u)
-            y = self.find_root(parent, v)
-            if x != y:
-                e = e + 1
-                result.append([w, u, v])
-                self.join_two_trees(parent, rank, x, y)
-        for weight, u, v in result:
-            self.total += weight
+
+def kruskal(graph, num_vertices):
+    result = []
+    i, e = 0, 0
+    parent = []
+    rank = []
+    total = 0
+    for node in range(num_vertices):
+        parent.append(node)
+        rank.append(0)
+    while e < num_vertices - 1:
+        (w, u, v) = graph[i]
+        i = i + 1
+        x = find_root(parent, u)
+        y = find_root(parent, v)
+        if x != y:
+            e = e + 1
+            result.append([w, u, v])
+            join_two_trees(parent, rank, x, y)
+    for weight, u, v in result:
+        total += weight
+    return total
 
 
 def minimum_cost_connecting_edges(input_file_path, output_file_path):
@@ -156,10 +154,9 @@ def minimum_cost_connecting_edges(input_file_path, output_file_path):
     matrix = set_pre_determined_edges_to_zero(matrix, pre_selected_edges)
     edges_list = list_edges(matrix)
     sort_edges(edges_list, 0, len(edges_list) - 1)
-    g = Graph(edges_list, len(matrix))
-    g.kruskal()
+    weight = kruskal(edges_list, len(matrix))
     out = open(output_file_path, "w")
-    out.write(str(g.total))
+    out.write(str(weight))
     out.close()
 
 
@@ -168,4 +165,4 @@ def minimum_cost_connecting_edges(input_file_path, output_file_path):
     files paths that you want to read from/write to.
 '''
 
-minimum_cost_connecting_edges('input16.in', 'output.txt')
+# minimum_cost_connecting_edges('input16.in', 'output.txt')
