@@ -109,18 +109,18 @@ def sort_edges(edges_list, start, end):
 
 class Graph:
     def __init__(self, edges, vertex):
-        self.V = vertex
+        self.vertices = vertex
         self.graph = edges
         self.total = 0
 
-    def search(self, parent, i):
+    def find_root(self, parent, i):
         if parent[i] == i:
             return i
-        return self.search(parent, parent[i])
+        return self.find_root(parent, parent[i])
 
-    def apply_union(self, parent, rank, x, y):
-        xroot = self.search(parent, x)
-        yroot = self.search(parent, y)
+    def join_two_trees(self, parent, rank, x, y):
+        xroot = self.find_root(parent, x)
+        yroot = self.find_root(parent, y)
         if rank[xroot] < rank[yroot]:
             parent[xroot] = yroot
         elif rank[xroot] > rank[yroot]:
@@ -134,18 +134,18 @@ class Graph:
         i, e = 0, 0
         parent = []
         rank = []
-        for node in range(self.V):
+        for node in range(self.vertices):
             parent.append(node)
             rank.append(0)
-        while e < self.V - 1:
+        while e < self.vertices - 1:
             (w, u, v) = self.graph[i]
             i = i + 1
-            x = self.search(parent, u)
-            y = self.search(parent, v)
+            x = self.find_root(parent, u)
+            y = self.find_root(parent, v)
             if x != y:
                 e = e + 1
                 result.append([w, u, v])
-                self.apply_union(parent, rank, x, y)
+                self.join_two_trees(parent, rank, x, y)
         for weight, u, v in result:
             self.total += weight
 
