@@ -54,13 +54,6 @@ def set_pre_determined_edges_to_zero(matrix, edges):
     return matrix
 
 
-def matrix_pretty_print(matrix):
-    for i in range(0, len(matrix)):
-        for j in range(0, len(matrix)):
-            print(matrix[i][j], end=" ")
-        print(" ")
-
-
 def list_edges(matrix):
     edges = []
     for i in range(0, len(matrix)):
@@ -74,6 +67,7 @@ def list_edges(matrix):
 
 
 def partition(edges, start, end):
+    """Partition the edges based on weight"""
     (pivot, _, _) = edges[start]
     low = start + 1
     high = end
@@ -100,6 +94,7 @@ def partition(edges, start, end):
 
 
 def sort_edges(edges_list, start, end):
+    """Partition sort the edges"""
     if start >= end:
         return
     p = partition(edges_list, start, end)
@@ -108,21 +103,23 @@ def sort_edges(edges_list, start, end):
 
 
 def find_root(parent, i):
+    """Finds the root of a tree given the index"""
     if parent[i] == i:
         return i
     return find_root(parent, parent[i])
 
 
 def join_two_trees(parent, rank, x, y):
-    xroot = find_root(parent, x)
-    yroot = find_root(parent, y)
-    if rank[xroot] < rank[yroot]:
-        parent[xroot] = yroot
-    elif rank[xroot] > rank[yroot]:
-        parent[yroot] = xroot
+    """Joins two trees via ranking"""
+    x_root = find_root(parent, x)
+    y_root = find_root(parent, y)
+    if rank[x_root] < rank[y_root]:
+        parent[x_root] = y_root
+    elif rank[x_root] > rank[y_root]:
+        parent[y_root] = x_root
     else:
-        parent[yroot] = xroot
-        rank[xroot] += 1
+        parent[y_root] = x_root
+        rank[x_root] += 1
 
 
 def kruskal(graph, num_vertices):
@@ -131,30 +128,34 @@ def kruskal(graph, num_vertices):
     parent = []
     rank = []
     total = 0
-    for node in range(num_vertices):
+    for node in range(num_vertices):  # create unconnected graph
         parent.append(node)
         rank.append(0)
-    while e < num_vertices - 1:
-        (w, u, v) = graph[i]
+    while e < num_vertices - 1:  # for each edge, add to MST if doesn't create cycle
+        (edge_weight, first, second) = graph[i]
         i = i + 1
-        x = find_root(parent, u)
-        y = find_root(parent, v)
-        if x != y:
+        first_parent = find_root(parent, first)
+        second_parent = find_root(parent, second)
+        if first_parent != second_parent:  # if have same parent, then same tree, so don't add
+            result.append([edge_weight, first, second])  # add edge to result
+            join_two_trees(parent, rank, first_parent, second_parent)  # join the two trees together
             e = e + 1
-            result.append([w, u, v])
-            join_two_trees(parent, rank, x, y)
-    for weight, u, v in result:
+    for weight, first, second in result:
         total += weight
     return total
 
 
 def minimum_cost_connecting_edges(input_file_path, output_file_path):
+    # take in matrix from file and input any predetermined edges
     matrix = create_matrix(input_file_path)
     pre_selected_edges = grab_pre_selected_edges(input_file_path)
     matrix = set_pre_determined_edges_to_zero(matrix, pre_selected_edges)
+
     edges_list = list_edges(matrix)
-    sort_edges(edges_list, 0, len(edges_list) - 1)
-    weight = kruskal(edges_list, len(matrix))
+    sort_edges(edges_list, 0, len(edges_list) - 1)  # sort edges
+    weight = kruskal(edges_list, len(matrix))  # run kruskal's algorithm
+
+    # Write out to file
     out = open(output_file_path, "w")
     out.write(str(weight))
     out.close()
